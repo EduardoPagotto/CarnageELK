@@ -1,0 +1,23 @@
+version: '3.4'
+services:
+  rsyslog:
+    build: ./rsyslog
+    container_name: rsyslog_container_test
+    image: rsyslog_imagem
+    environment:
+    - "TZ=America/Sao_Paulo" # (-03, -0300)
+    ports:
+    - 514:514/udp
+    volumes:
+    - ./log:/var/log
+    - ./rsyslog/rsyslog.d:/etc/rsyslog.d
+
+  # elk:
+  #   image: sebp/elk
+  #   container_name: elk_container_test
+  #   ports:
+  #     - "5601:5601"
+  #     - "9200:9200"
+  #     - "5044:5044"
+  #   depends_on:
+  #   - rsyslog
