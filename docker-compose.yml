@@ -1,16 +1,27 @@
 version: '3.4'
 services:
-  rsyslog:
-    build: ./rsyslog
-    container_name: rsyslog_container_test
-    image: rsyslog_imagem
-    environment:
-    - "TZ=America/Sao_Paulo" # (-03, -0300)
+  syslog-ng:
+    build: ./syslog-ng
+    image: balabit_syslog-ng
+    container_name: syslog-ng-teste
     ports:
     - 514:514/udp
+    - 601:601/tcp
+    - 6514:6514/tcp
     volumes:
     - ./log:/var/log
-    - ./rsyslog/rsyslog.d:/etc/rsyslog.d
+
+  # rsyslog:
+  #   build: ./rsyslog
+  #   container_name: rsyslog_container_test
+  #   image: rsyslog_imagem
+  #   environment:
+  #   - "TZ=America/Sao_Paulo" # (-03, -0300)
+  #   ports:
+  #   - 514:514/udp
+  #   volumes:
+  #   - ./log:/var/log
+  #   - ./rsyslog/rsyslog.d:/etc/rsyslog.d
 
   # elk:
   #   image: sebp/elk
