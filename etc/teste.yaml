@@ -9,7 +9,7 @@ loggin:
       datefmt: '%H:%M:%S'
       format: '%(asctime)s %(levelname)-8s %(message)s'
     syslog:
-      format: '%(levelname)s TESTE_APP %(processName)s %(threadName)s %(funcName)s %(message)s'
+      format: 'TESTE_APP %(levelname)s %(processName)s %(threadName)s %(funcName)s %(message)s'
     syslog2:
       format: '%(levelname)-8s TESTE_APP %(process)d %(thread)d %(funcName)s %(message)s'     
   handlers:
