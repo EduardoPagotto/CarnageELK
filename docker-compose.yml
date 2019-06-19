@@ -11,6 +11,16 @@ services:
     volumes:
     - ./log:/var/log
 
+  elk:
+    image: sebp/elk
+    container_name: elk_container_test
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+    depends_on:
+    - syslog-ng
+
   # rsyslog:
   #   build: ./rsyslog
   #   container_name: rsyslog_container_test
@@ -22,13 +32,3 @@ services:
   #   volumes:
   #   - ./log:/var/log
   #   - ./rsyslog/rsyslog.d:/etc/rsyslog.d
-
-  # elk:
-  #   image: sebp/elk
-  #   container_name: elk_container_test
-  #   ports:
-  #     - "5601:5601"
-  #     - "9200:9200"
-  #     - "5044:5044"
-  #   depends_on:
-  #   - syslog-ng
