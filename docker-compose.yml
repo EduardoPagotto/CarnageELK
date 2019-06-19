@@ -31,4 +31,4 @@ services:
   #     - "9200:9200"
   #     - "5044:5044"
   #   depends_on:
-  #   - rsyslog
+  #   - syslog-ng
