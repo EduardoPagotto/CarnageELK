@@ -3,6 +3,7 @@ Stack ELK Teste de implementação, atualmente input do elastic direto pelo sysl
 
 refs: 
 - https://elk-docker.readthedocs.io/#prerequisites
+- https://www.freecodecamp.org/news/how-to-use-elasticsearch-logstash-and-kibana-to-visualise-logs-in-python-in-realtime-acaab281c9de/
 
 # Dependencias
 Verificar se memoria esta compativel:
