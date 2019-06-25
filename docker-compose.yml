@@ -1,16 +1,6 @@
 version: '3.4'
 services:
-  syslog-ng:
-    build: ./syslog-ng
-    image: balabit_syslog-ng
-    container_name: syslog-ng-teste
-    ports:
-    - 514:514/udp
-    - 601:601/tcp
-    - 6514:6514/tcp
-    volumes:
-    - ./log:/var/log
-
+  # ELK
   elk:
     image: sebp/elk
     container_name: elk_container_test
@@ -18,8 +8,54 @@ services:
       - "5601:5601"
       - "9200:9200"
       - "5044:5044"
+    volumes:
+    - ./data/elk:/var/lib/elasticsearch
+
+  # Syslog
+  syslog-ng:
+    build: ./syslog-ng
+    image: balabit_syslog-ng
+    container_name: syslog-ng-teste
+    depends_on:
+    - elk
+    ports:
+    - 514:514/udp
+    - 601:601/tcp
+    - 6514:6514/tcp
+    volumes:
+    - ./data/logs:/var/log
+    
+  # Redis
+  redis:
+    build: ./redis
+    container_name: redis_container
+    image: redis_image
+    logging:
+      driver: syslog
+      options:
+        syslog-address: udp://127.0.0.1:514
+    ports:
+    - 6379:6379
     depends_on:
     - syslog-ng
+    volumes:
+    - ./data/redis:/data
+
+  # WEB 
+  nginx:
+    container_name: nginx_container
+    image: nginx
+    depends_on:
+    - syslog-ng
+    logging:
+      driver: syslog
+      options:
+        syslog-address: udp://127.0.0.1:514
+    volumes:
+    - /home/nfs_dsk/data:/usr/share/nginx/html
+    - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+    - 5080:80
 
   # rsyslog:
   #   build: ./rsyslog
