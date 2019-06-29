@@ -11,6 +11,10 @@ import logging
 import logging.config
 #sys.path.append('../')
 
+from datetime import datetime
+from elasticsearch import Elasticsearch
+
+import json
 
 def set_config_yaml(texto, app_name, config_file):
     """
@@ -37,30 +41,61 @@ def set_config_yaml(texto, app_name, config_file):
 
     quit()
 
-
-
 def envia_msg_func():
     logging.info('mensagem da funcao()')
 
 
-if __name__ == "__main__":
+def teste_logs():
 
     try:
-        config, log = set_config_yaml('Teste Logger V0.0', __name__, os.environ['CFG_APP'] if 'CFG_APP' in os.environ else './etc/teste.yaml')
-        log.info('Config carregado com sucesso')
-        logging.getLogger("requests").setLevel(logging.CRITICAL)
-        logging.getLogger("urllib3").setLevel(logging.CRITICAL)
-        logging.getLogger('werkzeug').setLevel(logging.CRITICAL)
+        #dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True, 'identificador':{'id':100, 'teste':'ola'}, 'valor':100.5}
+        dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True}
 
-        envia_msg_func()
+        var = json.dumps(dados)
 
-        logging.info('Teste INFO .....')
-        logging.debug('TESTE DEBUG.....')
-        logging.warning('Teste WARNNING .....')
-        logging.error('Teste ERRO .....')
-        logging.fatal('teste FATAL!!!')
+        #tt = var.replace('\"', '"')
+        logging.info('variavel=%s',var)
 
-        raise Exception('MSG DE ERRRO')
+
+        # logging.getLogger("requests").setLevel(logging.CRITICAL)
+        # logging.getLogger("urllib3").setLevel(logging.CRITICAL)
+        # logging.getLogger('werkzeug').setLevel(logging.CRITICAL)
+
+        # envia_msg_func()
+
+        # logging.info('Teste INFO .....')
+        # logging.debug('TESTE DEBUG.....')
+        # logging.warning('Teste WARNNING .....')
+        # logging.error('Teste ERRO .....')
+        # logging.fatal('teste FATAL!!!')
+
+        # raise Exception('MSG DE ERRRO')
 
     except:
         logging.exception('Recebido')
+
+if __name__ == "__main__":
+
+    config, log = set_config_yaml('Teste Logger V0.0', __name__, os.environ['CFG_APP'] if 'CFG_APP' in os.environ else './etc/teste.yaml')
+    log.info('Config carregado com sucesso')
+
+
+    es = Elasticsearch(['http://127.0.0.1:9200'])
+
+    teste = [{'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True, 'identificador':{'id':100, 'teste':'ola'}, 'valor':100.5, 'timestamp': datetime.now()},
+             {'nome':'Locutus', 'idade':320, 'sexo':True, 'identificador':{'id':101, 'teste':'merda'}, 'valor':10.0, 'timestamp': datetime.now()},
+             {'nome':'Jady', 'idade':38, 'sexo':False, 'identificador':{'id':102, 'teste':'ola'}, 'valor':120.05, 'timestamp': datetime.now()},
+             {'nome':'Lidia', 'idade':51, 'sexo':False, 'identificador':{'id':103, 'teste':'olaZZZ'}, 'valor':0.5, 'timestamp': datetime.now()}]
+
+    for indice in range(len(teste)):
+        res = es.index(index="test-index", doc_type='smart1', id=indice, body=teste[indice])
+        print(res['result'])
+        res = es.get(index="test-index", doc_type='smart1', id=indice)
+        print(res['_source'])
+
+    es.indices.refresh(index="test-index")
+
+    res = es.search(index="test-index", body={"query": {"match_all": {}}})
+    print("Got %d Hits:" % res['hits']['total'])
+    for hit in res['hits']['hits']:
+        print("%(timestamp)s %(nome)s: %(identificador)s" % hit["_source"])
