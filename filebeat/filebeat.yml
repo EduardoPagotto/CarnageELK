@@ -1,16 +1,9 @@
 filebeat:
   prospectors:
-    # -
-    #   paths:
-    #     - /var/log/nginx/vs_access.log
-    #   input_type: log
-    #   document_type: nginx_access
-    #   scan_frequency: 10s
-    -
-      paths:
-        - /var/log/*.log
+    - paths:
+      - /var/log/*.log
       input_type: log
-      document_type: app_error
+      document_type: python
       scan_frequency: 10s
 output:
   logstash:

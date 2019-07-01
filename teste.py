@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Created on 20190618
-Update on 20190618
+Update on 20190701
 @author: Eduardo Pagotto
 '''
 
@@ -28,9 +28,9 @@ def set_config_yaml(texto, app_name, config_file):
             global_config = yaml.load(stream)
             logging.config.dictConfig(global_config['loggin'])
             log = logging.getLogger(app_name)
-            log.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-            log.info(texto)
-            log.info('Load config: %s', config_file)
+            #log.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+            #log.info(texto)
+            #log.info('Load config: %s', config_file)
             return global_config, log
 
     except yaml.YAMLError as exc:
@@ -50,12 +50,7 @@ def teste_logs():
     try:
         #dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True, 'identificador':{'id':100, 'teste':'ola'}, 'valor':100.5}
         dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True}
-
-        var = json.dumps(dados)
-
-        #tt = var.replace('\"', '"')
-        logging.info('variavel=%s',var)
-
+        logging.info('%s', json.dumps(dados))
 
         # logging.getLogger("requests").setLevel(logging.CRITICAL)
         # logging.getLogger("urllib3").setLevel(logging.CRITICAL)
@@ -74,11 +69,7 @@ def teste_logs():
     except:
         logging.exception('Recebido')
 
-if __name__ == "__main__":
-
-    config, log = set_config_yaml('Teste Logger V0.0', __name__, os.environ['CFG_APP'] if 'CFG_APP' in os.environ else './etc/teste.yaml')
-    log.info('Config carregado com sucesso')
-
+def teste_direto():
 
     es = Elasticsearch(['http://127.0.0.1:9200'])
 
@@ -99,3 +90,11 @@ if __name__ == "__main__":
     print("Got %d Hits:" % res['hits']['total'])
     for hit in res['hits']['hits']:
         print("%(timestamp)s %(nome)s: %(identificador)s" % hit["_source"])
+
+
+if __name__ == "__main__":
+
+    config, log = set_config_yaml('Teste Logger V0.0', __name__, os.environ['CFG_APP'] if 'CFG_APP' in os.environ else './etc/teste.yaml')
+    log.info('Config carregado com sucesso')
+    teste_logs()
+

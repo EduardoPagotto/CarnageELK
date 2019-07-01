@@ -59,19 +59,19 @@ services:
     depends_on:
     - logstash
 
-  # Syslog
-  syslog-ng:
-    build: ./syslog-ng
-    image: balabit_syslog-ng
-    container_name: syslog-ng-teste
-    depends_on:
-    - elasticsearch
-    ports:
-    - 514:514/udp
-    - 601:601/tcp
-    - 6514:6514/tcp
-    volumes:
-    - ./data/logs:/var/log
+  # # Syslog
+  # syslog-ng:
+  #   build: ./syslog-ng
+  #   image: balabit_syslog-ng
+  #   container_name: syslog-ng-teste
+  #   depends_on:
+  #   - elasticsearch
+  #   ports:
+  #   - 514:514/udp
+  #   - 601:601/tcp
+  #   - 6514:6514/tcp
+  #   volumes:
+  #   - ./data/logs:/var/log
     
   # # Redis
   # redis:
