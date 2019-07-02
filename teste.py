@@ -50,7 +50,10 @@ def teste_logs():
     try:
         dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True, 'identificador':{'id':100, 'teste':'ola'}, 'valor':100.5}
         #dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True}
-        logging.info('%s', json.dumps(dados))
+        #logging.info('%s', json.dumps(dados))
+
+        logging.info('mensagem generica, %s',json.dumps(dados))
+        #logging.info("mensagem generica, aquisicao=
 
         # logging.getLogger("requests").setLevel(logging.CRITICAL)
         # logging.getLogger("urllib3").setLevel(logging.CRITICAL)

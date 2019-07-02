@@ -11,53 +11,53 @@ services:
   #   volumes:
   #   - ./data/elk:/var/lib/elasticsearch
 
-  elasticsearch:
-    image: elasticsearch:6.8.1
-    container_name: elasticsearch_container
-    environment:
-    - discovery.type=single-node
-    #- cluster.name=docker-cluster
-    #- bootstrap.memory_lock=true
-    #- "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    # ulimits:
-    #   memlock:
-    #     soft: -1
-    #     hard: -1
-    volumes:
-    - ./data/elasticsearch:/usr/share/elasticsearch/data
-    ports:
-    - 9200:9200
-    - 9300:9300
-    # networks:
-    # - esnet
+  # elasticsearch:
+  #   image: elasticsearch:6.8.1
+  #   container_name: elasticsearch_container
+  #   environment:
+  #   - discovery.type=single-node
+  #   #- cluster.name=docker-cluster
+  #   #- bootstrap.memory_lock=true
+  #   #- "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #   # ulimits:
+  #   #   memlock:
+  #   #     soft: -1
+  #   #     hard: -1
+  #   volumes:
+  #   - ./data/elasticsearch:/usr/share/elasticsearch/data
+  #   ports:
+  #   - 9200:9200
+  #   - 9300:9300
+  #   # networks:
+  #   # - esnet
 
-  kibana:
-    image: kibana:6.8.1
-    container_name: kibana_container
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
+  # kibana:
+  #   image: kibana:6.8.1
+  #   container_name: kibana_container
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - elasticsearch
 
-  logstash:
-    image: logstash:6.8.1
-    container_name: logstash_container
-    volumes:
-    - ./logstash/pipeline:/usr/share/logstash/pipeline
-    - ./data/logstash:/mnt
-    depends_on:
-    - elasticsearch
-    ports:
-    - 5044:5044
-    - 9600:9600
+  # logstash:
+  #   image: logstash:6.8.1
+  #   container_name: logstash_container
+  #   volumes:
+  #   - ./logstash/pipeline:/usr/share/logstash/pipeline
+  #   - ./data/logstash:/mnt
+  #   # depends_on:
+  #   # - elasticsearch
+  #   ports:
+  #   - 5044:5044
+  #   - 9600:9600
 
-  filebeat:
-    image: prima/filebeat
-    volumes:
-    - ./filebeat/filebeat.yml:/filebeat.yml
-    - ./data/logs:/var/log
-    depends_on:
-    - logstash
+  # filebeat:
+  #   image: prima/filebeat
+  #   volumes:
+  #   - ./filebeat/filebeat.yml:/filebeat.yml
+  #   - ./data/logs:/var/log
+  #   depends_on:
+  #   - logstash
 
   # # Syslog
   # syslog-ng:
@@ -73,37 +73,37 @@ services:
   #   volumes:
   #   - ./data/logs:/var/log
     
-  # # Redis
-  # redis:
-  #   build: ./redis
-  #   container_name: redis_container
-  #   image: redis_image
-  #   # logging:
-  #   #   driver: syslog
-  #   #   options:
-  #   #     syslog-address: udp://127.0.0.1:514
-  #   ports:
-  #   - 6379:6379
-  #   depends_on:
-  #   - syslog-ng
-  #   volumes:
-  #   - ./data/redis:/data
+  # Redis
+  redis:
+    build: ./redis
+    container_name: redis_container
+    image: redis_image
+    # logging:
+    #   driver: syslog
+    #   options:
+    #     syslog-address: udp://127.0.0.1:514
+    ports:
+    - 6379:6379
+    # depends_on:
+    # - syslog-ng
+    volumes:
+    - ./data/redis:/data
 
-  # # WEB 
-  # nginx:
-  #   container_name: nginx_container
-  #   image: nginx
-  #   depends_on:
-  #   - syslog-ng
-  #   # logging:
-  #   #   driver: syslog
-  #   #   options:
-  #   #     syslog-address: udp://127.0.0.1:514
-  #   volumes:
-  #   - /home/nfs_dsk/data:/usr/share/nginx/html
-  #   - ./nginx/conf.d:/etc/nginx/conf.d
-  #   ports:
-  #   - 5080:80
+  # WEB 
+  nginx:
+    container_name: nginx_container
+    image: nginx
+    # depends_on:
+    # - syslog-ng
+    # logging:
+    #   driver: syslog
+    #   options:
+    #     syslog-address: udp://127.0.0.1:514
+    volumes:
+    - /home/nfs_dsk/data:/usr/share/nginx/html
+    - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+    - 5080:80
 
   # rsyslog:
   #   build: ./rsyslog

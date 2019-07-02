@@ -7,7 +7,8 @@ loggin:
       format: '%(asctime)s %(levelname)s %(process)d %(threadName)s %(filename)s %(lineno)d %(funcName)s %(message)s'
     normal:
       datefmt: '%Y-%m-%dT%H:%M:%S%z'
-      format: '{"APP":"TESTE_APP1", "time":"%(asctime)s", "level":"%(levelname)s", "data":%(message)s}'
+      format: '%(asctime)s, %(levelname)s, %(funcName)s, %(message)s'
+      #format: '{"APP":"TESTE_APP1", "time":"%(asctime)s", "level":"%(levelname)s", "data":%(message)s}'
     syslog:
       format: 'testeapp %(levelname)s process_name=%(processName)s thread_name=%(threadName)s func_name=%(funcName)s message_app=%(message)s'
     syslog2:
