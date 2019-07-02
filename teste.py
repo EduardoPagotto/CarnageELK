@@ -48,8 +48,8 @@ def envia_msg_func():
 def teste_logs():
 
     try:
-        #dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True, 'identificador':{'id':100, 'teste':'ola'}, 'valor':100.5}
-        dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True}
+        dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True, 'identificador':{'id':100, 'teste':'ola'}, 'valor':100.5}
+        #dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True}
         logging.info('%s', json.dumps(dados))
 
         # logging.getLogger("requests").setLevel(logging.CRITICAL)
@@ -95,6 +95,6 @@ def teste_direto():
 if __name__ == "__main__":
 
     config, log = set_config_yaml('Teste Logger V0.0', __name__, os.environ['CFG_APP'] if 'CFG_APP' in os.environ else './etc/teste.yaml')
-    log.info('Config carregado com sucesso')
+    #log.info('Config carregado com sucesso')
     teste_logs()
 
