@@ -76,12 +76,19 @@ def teste_direto():
     teste = [{'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True, 'identificador':{'id':100, 'teste':'ola'}, 'valor':100.5, 'timestamp': datetime.now()},
              {'nome':'Locutus', 'idade':320, 'sexo':True, 'identificador':{'id':101, 'teste':'merda'}, 'valor':10.0, 'timestamp': datetime.now()},
              {'nome':'Jady', 'idade':38, 'sexo':False, 'identificador':{'id':102, 'teste':'ola'}, 'valor':120.05, 'timestamp': datetime.now()},
-             {'nome':'Lidia', 'idade':51, 'sexo':False, 'identificador':{'id':103, 'teste':'olaZZZ'}, 'valor':0.5, 'timestamp': datetime.now()}]
+             {'nome':'Lidia', 'idade':51, 'sexo':False, 'identificador':{'id':103, 'teste':'olaZZZ'}, 'valor':0.5, 'timestamp': datetime.now()},
+             {'status':False, 'id':'0001', 'nome':'dedalus', 'timestamp': datetime.now()},
+             {'status':False, 'id':'0002', 'nome':'dedalus', 'timestamp': datetime.now()},
+             {'status':False, 'id':'0003', 'nome':'dedalus', 'timestamp': datetime.now()},
+             {'status':False, 'id':'0004', 'nome':'dedalus', 'timestamp': datetime.now()}
+            ]
+
+    val = 0
 
     for indice in range(len(teste)):
-        res = es.index(index="test-index", doc_type='smart1', id=indice, body=teste[indice])
+        res = es.index(index="test-index", doc_type='smart_{0}'.format(val), id=indice, body=teste[indice])
         print(res['result'])
-        res = es.get(index="test-index", doc_type='smart1', id=indice)
+        res = es.get(index="test-index", doc_type='smart_{0}'.format(val), id=indice)
         print(res['_source'])
 
     es.indices.refresh(index="test-index")
@@ -89,10 +96,12 @@ def teste_direto():
     res = es.search(index="test-index", body={"query": {"match_all": {}}})
     print("Got %d Hits:" % res['hits']['total'])
     for hit in res['hits']['hits']:
-        print("%(timestamp)s %(nome)s: %(identificador)s" % hit["_source"])
+        print("%(timestamp)s %(nome)s: %(timestamp)s" % hit["_source"])
 
 
 if __name__ == "__main__":
+
+    #teste_direto()
 
     config, log = set_config_yaml('Teste Logger V0.0', __name__, os.environ['CFG_APP'] if 'CFG_APP' in os.environ else './etc/teste.yaml')
     #log.info('Config carregado com sucesso')

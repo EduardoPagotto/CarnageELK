@@ -1,4 +1,5 @@
   #!/bin/bash
+  sudo rm -rf ./data/*
   mkdir -p ./data/logs
   mkdir -p ./data/redis
   mkdir -p ./data/elk

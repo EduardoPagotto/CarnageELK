@@ -5,6 +5,8 @@ filebeat:
       input_type: log
       document_type: python
       scan_frequency: 10s
+      fields:
+        indice: 'smartcapturez1'
 output:
   logstash:
     hosts: ["logstash:5044"]
