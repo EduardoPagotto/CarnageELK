@@ -7,13 +7,17 @@ loggin:
       format: '%(asctime)s %(levelname)s %(process)d %(threadName)s %(filename)s %(lineno)d %(funcName)s %(message)s'
     normal:
       datefmt: '%Y-%m-%dT%H:%M:%S%z'
-      format: '%(asctime)s, %(levelname)s, %(funcName)s, %(message)s'
-      #format: '{"APP":"TESTE_APP1", "time":"%(asctime)s", "level":"%(levelname)s", "data":%(message)s}'
-    syslog:
-      format: 'testeapp %(levelname)s process_name=%(processName)s thread_name=%(threadName)s func_name=%(funcName)s message_app=%(message)s'
-    syslog2:
-      format: '%(levelname)-8s TESTE_APP %(process)d %(thread)d %(funcName)s %(message)s'     
+      format: '%(asctime)s %(levelname)s %(funcName)s %(message)s'
   handlers:
+    Logstash_handler:
+      class: logstash.UDPLogstashHandler
+      host: '127.0.0.1'
+      port: 5959 
+      version: 1 
+      message_type: docz1 # logstash
+      fqdn: False 
+      tags: ['indice-app-teste', 'appteste']
+      level: DEBUG
     teste_handler:
       backupCount: 30
       class: logging.handlers.TimedRotatingFileHandler
@@ -23,13 +27,13 @@ loggin:
       formatter: normal
       interval: 1
       when: midnight
-    sys:
-      address:
-      - localhost
-      - 514
-      class: logging.handlers.SysLogHandler
-      facility: local5
-      formatter: syslog
+    # sys:
+    #   address:
+    #   - localhost
+    #   - 514
+    #   class: logging.handlers.SysLogHandler
+    #   facility: local5
+    #   formatter: syslog
   # loggers:
   #   testez1:
   #     handlers:
@@ -40,5 +44,6 @@ loggin:
   root:
     handlers:
     - teste_handler
+    - Logstash_handler
     #- sys
     level: DEBUG

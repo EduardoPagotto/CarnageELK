@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Created on 20190618
-Update on 20190701
+Update on 20190703
 @author: Eduardo Pagotto
 '''
 
@@ -11,6 +11,7 @@ import logging
 import logging.config
 #sys.path.append('../')
 
+#import logstash
 from datetime import datetime
 from elasticsearch import Elasticsearch
 
@@ -52,7 +53,7 @@ def teste_logs():
         #dados = {'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True}
         #logging.info('%s', json.dumps(dados))
 
-        logging.info('mensagem generica, %s',json.dumps(dados))
+        logging.info('mensagem generica', extra=dados)
         #logging.info("mensagem generica, aquisicao=
 
         # logging.getLogger("requests").setLevel(logging.CRITICAL)
