@@ -47,3 +47,21 @@ loggin:
     - Logstash_handler
     #- sys
     level: DEBUG
+
+
+app_teste:
+  redis_host:
+    ip: '192.168.0.1'
+    porta: 6301
+    db: 5
+    password: AAABBBCCC
+    bloqueado:
+    - 'val1'
+    - 'val2'
+    - 'val3'
+    estrutura:
+      valor: 0
+      ativo: false
+      nome: teste
+      
+   

@@ -103,11 +103,56 @@ def teste_direto():
         print("%(timestamp)s %(nome)s: %(timestamp)s" % hit["_source"])
 
 
+def loader_json_dados(objeto, cfg):
+    desconhecidos = []
+    for key in cfg:
+        if key in objeto.__dict__:
+            setattr(objeto, key, cfg[key])
+        else:
+            desconhecidos.append(key)
+
+    return desconhecidos
+
+class Extrutura(object):
+    def __init__(self, cfg_data):
+
+        self.valor= 0
+        self.ativo= True
+        self.nome= ''
+        pendencia = loader_json_dados(self, cfg_data)
+        if len(pendencia) > 0:
+            raise Exception('Campo(s):{0} nao existe na classe:{1}'.format(pendencia, self.__class__.__name__))
+
+    def __repr__(self):
+        return "<RedisHost:%s>" % self.__dict__
+
+class RedisHost(object):
+    def __init__(self, cfg_data):
+
+        self.ip = '127.0.0.1'
+        self.porta = 1212
+        self.db = 0
+        self.password = ''
+        self.bloqueado = []
+
+        pendencia = loader_json_dados(self, cfg_data)
+        self.estrutura = Extrutura(cfg_data[pendencia[0]]) #cfg_data['estrutura'])
+        
+    def __repr__(self):
+        return "<RedisHost:%s>" % self.__dict__
+
 if __name__ == "__main__":
 
     #teste_direto()
-
     config, log = set_config_yaml('Teste Logger V0.0', __name__, os.environ['CFG_APP'] if 'CFG_APP' in os.environ else './etc/teste.yaml')
-    #log.info('Config carregado com sucesso')
-    teste_logs()
+    log.info('Config carregado com sucesso')
+    try:
+        r = RedisHost(config['app_teste']['redis_host'])
+        logging.info(str(r))
+        logging.info(str(r.ip))
+    except Exception as exp:
+        logging.error(str(exp))
+
+
+    #teste_logs()
 

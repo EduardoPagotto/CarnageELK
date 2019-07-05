@@ -74,37 +74,37 @@ services:
   #   volumes:
   #   - ./data/logs:/var/log
     
-  # # Redis
-  # redis:
-  #   build: ./redis
-  #   container_name: redis_container
-  #   image: redis_image
-  #   # logging:
-  #   #   driver: syslog
-  #   #   options:
-  #   #     syslog-address: udp://127.0.0.1:514
-  #   ports:
-  #   - 6379:6379
-  #   # depends_on:
-  #   # - syslog-ng
-  #   volumes:
-  #   - ./data/redis:/data
+  # Redis
+  redis:
+    build: ./redis
+    container_name: redis_container
+    image: redis_image
+    # logging:
+    #   driver: syslog
+    #   options:
+    #     syslog-address: udp://127.0.0.1:514
+    ports:
+    - 6379:6379
+    # depends_on:
+    # - syslog-ng
+    volumes:
+    - ./data/redis:/data
 
-  # # WEB 
-  # nginx:
-  #   container_name: nginx_container
-  #   image: nginx
-  #   # depends_on:
-  #   # - syslog-ng
-  #   # logging:
-  #   #   driver: syslog
-  #   #   options:
-  #   #     syslog-address: udp://127.0.0.1:514
-  #   volumes:
-  #   - /home/nfs_dsk/data:/usr/share/nginx/html
-  #   - ./nginx/conf.d:/etc/nginx/conf.d
-  #   ports:
-  #   - 5080:80
+  # WEB 
+  nginx:
+    container_name: nginx_container
+    image: nginx
+    # depends_on:
+    # - syslog-ng
+    # logging:
+    #   driver: syslog
+    #   options:
+    #     syslog-address: udp://127.0.0.1:514
+    volumes:
+    - /home/nfs_dsk/data:/usr/share/nginx/html
+    - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+    - 5080:80
 
   # rsyslog:
   #   build: ./rsyslog
