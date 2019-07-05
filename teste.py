@@ -102,16 +102,42 @@ def teste_direto():
     for hit in res['hits']['hits']:
         print("%(timestamp)s %(nome)s: %(timestamp)s" % hit["_source"])
 
-
-def loader_json_dados(objeto, cfg):
+def classAtributesLoader(objeto, cfg, lista_excessao=None):
+    """[Carrega atributos do dict no self]
+    Arguments:
+        objeto {[[Class.self]]} -- [self da classe que se quer carregar os atributos]
+        cfg {[dict]} -- [dictionary com os atributos a serem carregados]
+    Keyword Arguments:
+        lista_excessao {[List<string>]} -- [lista com nomes dos atributos de excessao] (default: {None})
+    Raises:
+        Exception: [Atributo no dict nao existe no self do objeto e nao esta na lista de excessao]
+    Return:
+        string com resumo da carga para possivel saida em logging de debug
+    """
     desconhecidos = []
+    tot_carregados = 0
     for key in cfg:
         if key in objeto.__dict__:
+            tot_carregados += 1
             setattr(objeto, key, cfg[key])
         else:
-            desconhecidos.append(key)
+            if lista_excessao is None:
+                raise Exception('Campo:{0} nao existe na classe:{1}'.format(key, objeto.__class__.__name__))
+            else:
+                if key in lista_excessao:
+                    desconhecidos.append(key)
+                    continue
+                
+                raise Exception('Campo:{0} nao existe na classe aninhada:{1}'.format(key, objeto.__class__.__name__)) 
 
-    return desconhecidos
+    if lista_excessao is None:
+        return 'Carga automatica de atributos Classe:{0} atributos:{1} ignorados:0'.format(str(objeto.__class__.__name__), tot_carregados)
+
+    nova = list(set(desconhecidos) - set(lista_excessao))
+    if len(nova) != 0:
+        raise Exception('Campo(s):{0} nao existe(m) na classe:{1}'.format(str(nova), objeto.__class__.__name__))
+
+    return 'Carga automatica de atributos Classe:{0} atributos:{1} ignorados:{2}'.format(str(objeto.__class__.__name__), tot_carregados, len(lista_excessao))
 
 class Extrutura(object):
     def __init__(self, cfg_data):
@@ -119,12 +145,10 @@ class Extrutura(object):
         self.valor= 0
         self.ativo= True
         self.nome= ''
-        pendencia = loader_json_dados(self, cfg_data)
-        if len(pendencia) > 0:
-            raise Exception('Campo(s):{0} nao existe na classe:{1}'.format(pendencia, self.__class__.__name__))
+        logging.debug(classAtributesLoader(self, cfg_data))
 
     def __repr__(self):
-        return "<RedisHost:%s>" % self.__dict__
+        return "<Extrutura:%s>" % self.__dict__
 
 class RedisHost(object):
     def __init__(self, cfg_data):
@@ -135,8 +159,11 @@ class RedisHost(object):
         self.password = ''
         self.bloqueado = []
 
-        pendencia = loader_json_dados(self, cfg_data)
-        self.estrutura = Extrutura(cfg_data[pendencia[0]]) #cfg_data['estrutura'])
+        self.interno = 100
+
+        logging.debug(classAtributesLoader(self, cfg_data, ['estrutura']))
+
+        self.estrutura = Extrutura(cfg_data['estrutura']) # cfg_data[pendencias[0]]
         
     def __repr__(self):
         return "<RedisHost:%s>" % self.__dict__

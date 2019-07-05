@@ -63,5 +63,7 @@ app_teste:
       valor: 0
       ativo: false
       nome: teste
+      #autenticacao: teste
+    interno: 50
       
    
