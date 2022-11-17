@@ -1,0 +1,5 @@
+elasticsearch==8.5.0
+python-logstash==0.4.8
+PyYAML==6.0
+types-PyYAML==6.0.12.2
+typing_extensions==4.4.0

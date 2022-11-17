@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 '''
 Created on 20190618
-Update on 20190703
+Update on 20221116
 @author: Eduardo Pagotto
 '''
 
-import os
-import yaml
 import logging
 import logging.config
-#sys.path.append('../')
-
+import os
 #import logstash
 from datetime import datetime
+
+import yaml
 from elasticsearch import Elasticsearch
 
-import json
+#sys.path.append('../')
+
+
 
 def set_config_yaml(texto, app_name, config_file):
     """
@@ -26,12 +27,14 @@ def set_config_yaml(texto, app_name, config_file):
     """
     try:
         with open(config_file, 'r') as stream:
-            global_config = yaml.load(stream)
+
+            global_config = yaml.safe_load(stream)
             logging.config.dictConfig(global_config['loggin'])
             log = logging.getLogger(app_name)
-            #log.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-            #log.info(texto)
-            #log.info('Load config: %s', config_file)
+
+            log.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+            log.info(texto)
+            log.info('Load config: %s', config_file)
             return global_config, log
 
     except yaml.YAMLError as exc:
@@ -75,7 +78,7 @@ def teste_logs():
 
 def teste_direto():
 
-    es = Elasticsearch(['http://127.0.0.1:9200'])
+    elastic = Elasticsearch(['http://127.0.0.1:9200'])
 
     teste = [{'nome':'Eduardo Pagotto', 'idade':48, 'sexo':True, 'identificador':{'id':100, 'teste':'ola'}, 'valor':100.5, 'timestamp': datetime.now()},
              {'nome':'Locutus', 'idade':320, 'sexo':True, 'identificador':{'id':101, 'teste':'merda'}, 'valor':10.0, 'timestamp': datetime.now()},
@@ -90,14 +93,14 @@ def teste_direto():
     val = 0
 
     for indice in range(len(teste)):
-        res = es.index(index="test-index", doc_type='smart_{0}'.format(val), id=indice, body=teste[indice])
+        res = elastic.index(index="test-index", doc_type='smart_{0}'.format(val), id=indice, body=teste[indice])
         print(res['result'])
-        res = es.get(index="test-index", doc_type='smart_{0}'.format(val), id=indice)
+        res = elastic.get(index="test-index", doc_type='smart_{0}'.format(val), id=indice)
         print(res['_source'])
 
-    es.indices.refresh(index="test-index")
+    elastic.indices.refresh(index="test-index")
 
-    res = es.search(index="test-index", body={"query": {"match_all": {}}})
+    res = elastic.search(index="test-index", body={"query": {"match_all": {}}})
     print("Got %d Hits:" % res['hits']['total'])
     for hit in res['hits']['hits']:
         print("%(timestamp)s %(nome)s: %(timestamp)s" % hit["_source"])
@@ -151,6 +154,9 @@ class Extrutura(object):
         return "<Extrutura:%s>" % self.__dict__
 
 class RedisHost(object):
+    """
+    RedisHost
+    """
     def __init__(self, cfg_data):
 
         self.ip = '127.0.0.1'
@@ -168,7 +174,7 @@ class RedisHost(object):
             raise Exception(carga[1])
 
         self.estrutura = Extrutura(cfg_data['estrutura'])
-        
+
     def __repr__(self):
         return "<RedisHost:%s>" % self.__dict__
 

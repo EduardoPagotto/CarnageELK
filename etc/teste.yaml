@@ -23,7 +23,7 @@ loggin:
       class: logging.handlers.TimedRotatingFileHandler
       delay: true
       encoding: utf8
-      filename: ./data/logs/logDireto.log
+      filename: ./log/logDireto.log
       formatter: normal
       interval: 1
       when: midnight
